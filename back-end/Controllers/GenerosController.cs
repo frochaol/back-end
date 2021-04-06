@@ -2,6 +2,8 @@
 {
     using back_end.Entidades;
     using back_end.Entidades.Repositorios;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Collections.Generic;
@@ -22,7 +24,9 @@
         [HttpGet]
         [HttpGet("listado")]
         [HttpGet("/listadogeneros")]
-        public List<Genero> Get()
+        //[ResponseCache(Duration = 60)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public ActionResult<List<Genero>> Get()
         {
             return _repositorio.ObtenerTodosLosGeneros();
         }
@@ -31,33 +35,33 @@
         //[HttpGet("{Id}/{nombre}")]
         //[HttpGet("{Id}/{nombre=pordefecto}")]
         [HttpGet("{Id:int}/{nombre=pordefecto}")]
-        public Genero Get(int Id)
+        public async Task<ActionResult<Genero>> Get(int Id)
         {
-            var genero = _repositorio.ObtenerPorId(Id);
+            var genero = await _repositorio.ObtenerPorId(Id);
 
             if (genero == null)
             {
-                //return NotFound();
+                return NotFound();
             }
             return genero;
         }
 
         [HttpPost]
-        public void Post()
+        public ActionResult Post([FromBody] Genero genero)
         {
-
+            return NoContent();
         }
 
         [HttpPut]
-        public void Put()
+        public ActionResult Put([FromBody] Genero genero)
         {
-
+            return NoContent();
         }
 
         [HttpDelete]
-        public void Delete()
+        public ActionResult Delete()
         {
-
+            return NoContent();
         }
     }
 }
