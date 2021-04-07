@@ -1,7 +1,10 @@
 ﻿namespace back_end.Controllers
 {
+    using AutoMapper;
+    using back_end.DTOs;
     using back_end.Entidades;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
@@ -12,32 +15,46 @@
     public class GenerosController: ControllerBase
     {
         private readonly ILogger<GenerosController> _logger;
+        private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
-        public GenerosController(ILogger<GenerosController> logger)
+        public GenerosController(
+            ILogger<GenerosController> logger,
+            ApplicationDbContext context,
+            IMapper mapper)
         {
             this._logger = logger;
+            this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult<List<Genero>> Get()
+        public async Task<ActionResult<List<GeneroDTO>>> Get()
         {
-            //return _repositorio.ObtenerTodosLosGeneros();
-            return new List<Genero>()
-            {
-                new Genero() {Id = 1 , Nombre = "Acción"},
-            };
+            var generos = await context.Generos.ToListAsync();
+            return mapper.Map<List<GeneroDTO>>(generos);
+
+            //var resultado = new List<GeneroDTO>();
+            //foreach (var genero in generos)
+            //{
+            //    resultado.Add(new GeneroDTO() { Id = genero.Id, Nombre = genero.Nombre });
+            //}
+            //return resultado;
         }
 
         [HttpGet("{Id:int}")]
-        public async Task<ActionResult<Genero>> Get(int Id)
+        public ActionResult<Genero> Get(int Id)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Genero genero)
+        public async Task<ActionResult> Post([FromBody] GeneroCreacionDTO generoCreacionDTO)
         {
-            throw new NotImplementedException();
+            var genero = mapper.Map<Genero>(generoCreacionDTO);
+            context.Add(genero);
+            await context.SaveChangesAsync();
+            return NoContent();
         }
 
         [HttpPut]

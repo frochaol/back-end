@@ -4,6 +4,7 @@ namespace back_end
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -20,9 +21,22 @@ namespace back_end
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {            
-            // ESQUEMA DE AUTENTICACIÓN
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+        {
+            services.AddAutoMapper(typeof(Startup));    // CONFIGURACIÓN DE AUTOMAPER
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+
+
+            services.AddCors(options =>
+            {
+                var frontEndURL = Configuration.GetValue<string>("fronend_url");
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins(frontEndURL).AllowAnyMethod().AllowAnyHeader();
+                });
+            });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();  // ESQUEMA DE AUTENTICACIÓN
             services.AddControllers(options => {
                 options.Filters.Add(typeof(FiltroDeExcepcion));
             });
@@ -45,6 +59,8 @@ namespace back_end
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
 
