@@ -33,7 +33,8 @@ namespace back_end
                 var frontEndURL = Configuration.GetValue<string>("fronend_url");
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins(frontEndURL).AllowAnyMethod().AllowAnyHeader();
+                    builder.WithOrigins(frontEndURL).AllowAnyMethod().AllowAnyHeader()
+                    .WithExposedHeaders(new string[] { "cantidadTotalRegistros" });
                 });
             });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();  // ESQUEMA DE AUTENTICACIÓN
