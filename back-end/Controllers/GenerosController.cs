@@ -56,7 +56,6 @@
             }
 
             return mapper.Map<GeneroDTO>(genero);
-
         }
 
         [HttpPost]
@@ -85,8 +84,8 @@
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var existe = await context.Generos.AnyAsync(x => x.Id == id);
-            if (!existe)
+            var existe = await context.Generos.FirstOrDefaultAsync(x => x.Id == id);
+            if (existe == null)
             {
                 return NotFound();
             }
@@ -94,7 +93,6 @@
             context.Remove(new Genero() { Id = id });
             await context.SaveChangesAsync();
             return NoContent();
-
         }
     }
 }
