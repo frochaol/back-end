@@ -1,5 +1,6 @@
 namespace back_end
 {
+    using AutoMapper;
     using back_end.Filtros;
     using back_end.Utilidades;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +11,8 @@ namespace back_end
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
+    using NetTopologySuite;
+    using NetTopologySuite.Geometries;
 
     public class Startup
     {
@@ -24,14 +27,26 @@ namespace back_end
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));    // CONFIGURACIÓN DE AUTOMAPER
+            
+            services.AddSingleton(provider =>
+                new MapperConfiguration(config =>
+                {
+                    var geometryFactory = provider.GetRequiredService<GeometryFactory>();
+                    config.AddProfile(new AutoMapperProfiles(geometryFactory));
+                }).CreateMapper());
+
+            services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
 
             services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosLocal>();
             services.AddHttpContextAccessor();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
-
-
+            options.UseSqlServer(
+                Configuration.GetConnectionString("defaultConnection"),
+                sqlServer => sqlServer.UseNetTopologySuite()
+                )
+            );
+                        
             services.AddCors(options =>
             {
                 var frontEndURL = Configuration.GetValue<string>("fronend_url");
