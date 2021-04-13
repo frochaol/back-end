@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace back_end.Utilidades
+﻿namespace back_end.Utilidades
 {
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+
     public class AlmacenadorArchivosLocal : IAlmacenadorArchivos
     {
         private readonly IWebHostEnvironment env;

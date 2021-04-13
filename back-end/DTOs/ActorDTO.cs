@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace back_end.DTOs
+﻿namespace back_end.DTOs
 {
+    using System;
+
     public class ActorDTO
     {
         public int Id { get; set; }

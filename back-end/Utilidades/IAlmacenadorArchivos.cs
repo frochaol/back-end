@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace back_end.Utilidades
+﻿namespace back_end.Utilidades
 {
+    using Microsoft.AspNetCore.Http;
+    using System.Threading.Tasks;
+
     public interface IAlmacenadorArchivos
     {
         Task BorrarArchivo(string ruta, string contenedor);

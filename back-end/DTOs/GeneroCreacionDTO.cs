@@ -1,12 +1,8 @@
-﻿using back_end.Validaciones;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace back_end.DTOs
+﻿namespace back_end.DTOs
 {
+    using back_end.Validaciones;
+    using System.ComponentModel.DataAnnotations;
+
     public class GeneroCreacionDTO
     {
         [Required(ErrorMessage = "El campo {0} es requerido")]

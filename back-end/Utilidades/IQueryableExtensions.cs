@@ -1,11 +1,8 @@
-﻿using back_end.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace back_end.Utilidades
+﻿namespace back_end.Utilidades
 {
+    using back_end.DTOs;
+    using System.Linq;
+
     public static class IQueryableExtensions
     {
         public static IQueryable<T> Paginar<T>(this IQueryable<T> queryable, PaginacionDTO paginacionDTO)
