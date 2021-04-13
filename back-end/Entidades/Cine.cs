@@ -1,12 +1,9 @@
-﻿using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace back_end.Entidades
+﻿namespace back_end.Entidades
 {
+    using NetTopologySuite.Geometries;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
     public class Cine
     {
         public int Id { get; set; }
@@ -14,7 +11,7 @@ namespace back_end.Entidades
         [StringLength(maximumLength: 75)]
         public string Nombre { get; set; }
         public Point Ubicacion { get; set; }
-
+        public List<PeliculasCines> PeliculasCines { get; set; }
 
     }
 }

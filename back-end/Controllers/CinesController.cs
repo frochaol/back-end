@@ -29,10 +29,22 @@
         [HttpGet]
         public async Task<ActionResult<List<CineDTO>>> Get([FromQuery] PaginacionDTO paginacionDTO)
         {
-            var queryable = context.Actores.AsQueryable();
+            var queryable = context.Cines   .AsQueryable();
             await HttpContext.InsertarParametrosPaginacionEnCabecera(queryable);
             var cines = await queryable.OrderBy(x => x.Nombre).Paginar(paginacionDTO).ToListAsync();
             return mapper.Map<List<CineDTO>>(cines);
+        }
+
+        [HttpGet("{Id:int}")]
+        public async Task<ActionResult<CineDTO>> Get(int Id)
+        {
+            var cine = await context.Cines.FirstOrDefaultAsync(x => x.Id == Id);
+            if (cine == null)
+            {
+                return NotFound();
+            }
+
+            return mapper.Map<CineDTO>(cine);
         }
 
         [HttpPost]
@@ -40,6 +52,34 @@
         {
             var cine = mapper.Map<Cine>(cineCreacionDTO);
             context.Add(cine);
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int Id, [FromBody] CineCreacionDTO cineCreacionDTO)
+        {
+            var cine = await context.Cines.FirstOrDefaultAsync(x => x.Id == Id);
+            if (cine == null)
+            {
+                return NotFound();
+            }
+
+            cine = mapper.Map(cineCreacionDTO, cine);
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var existe = await context.Cines.AnyAsync(x => x.Id == id);
+            if (!existe)
+            {
+                return NotFound();
+            }
+
+            context.Remove(new Cine() { Id = id });
             await context.SaveChangesAsync();
             return NoContent();
         }

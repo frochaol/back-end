@@ -1,6 +1,7 @@
 ﻿namespace back_end.Entidades
 {
     using back_end.Validaciones;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class Genero
@@ -10,6 +11,6 @@
         [StringLength(maximumLength: 50)]
         [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
-
+        public List<PeliculasGeneros> PeliculasGeneros { get; set; }
     }
 }

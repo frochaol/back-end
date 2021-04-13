@@ -84,8 +84,8 @@
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var existe = await context.Generos.FirstOrDefaultAsync(x => x.Id == id);
-            if (existe == null)
+            var existe = await context.Generos.AnyAsync(x => x.Id == id);
+            if (!existe)
             {
                 return NotFound();
             }
