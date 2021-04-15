@@ -9,7 +9,6 @@
 
     public class PeliculaCreacionDTO
     {
-        public int Id { get; set; }
         [Required]
         [StringLength(maximumLength: 50)]
         public string Titulo { get; set; }
