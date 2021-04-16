@@ -6,13 +6,17 @@ namespace back_end
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
     using NetTopologySuite;
     using NetTopologySuite.Geometries;
+    using System;
+    using System.Text;
 
     public class Startup
     {
@@ -56,7 +60,24 @@ namespace back_end
                     .WithExposedHeaders(new string[] { "cantidadTotalRegistros" });
                 });
             });
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();  // ESQUEMA DE AUTENTICACIÓN
+
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opciones =>
+                    opciones.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer   = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["llavejwt"])),
+                        ClockSkew = TimeSpan.Zero
+                    });
+            
             services.AddControllers(options => {
                 options.Filters.Add(typeof(FiltroDeExcepcion));
             });

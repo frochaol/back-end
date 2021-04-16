@@ -1,9 +1,10 @@
 ﻿namespace back_end
 {
     using back_end.Entidades;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext: IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions options): base(options)
         {
